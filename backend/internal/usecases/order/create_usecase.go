@@ -78,9 +78,12 @@ func (u *CreateOrder) sendMessage(
 	o order_entity.Order,
 	i tgi_entity.TelegramIntegration,
 ) (*tgl_entity.TelegramLog, error) {
+	if log, err := u.repositories.TelegramLog.GetLog(o.ShopID, o.ID); err != nil || log != nil {
+		return log, err
+	}
+
 	message := tgl_service.MakeLogMessage(o.Number, o.Total, o.CustomerName)
-	err := u.services.TelegramSender.SendMessage(i.BotToken, i.ChatID, message)
-	if err != nil {
+	if err := u.services.TelegramSender.SendMessage(i.BotToken, i.ChatID, message); err != nil {
 		return u.repositories.TelegramLog.CreateLog(o.ShopID, o.ID, message, tgl_enum.Failed, err.Error())
 	}
 

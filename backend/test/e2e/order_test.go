@@ -110,7 +110,7 @@ func TestOrder_Idempotent(t *testing.T) {
 	}
 
 	postJSONWithStatus(t, "/api/shops/2/orders", order, http.StatusOK)
-	postJSONWithStatus(t, "/api/shops/2/orders", order, http.StatusUnprocessableEntity)
+	postJSONWithStatus(t, "/api/shops/2/orders", order, http.StatusOK)
 
 	time.Sleep(1 * time.Second)
 

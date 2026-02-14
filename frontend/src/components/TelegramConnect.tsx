@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import IntegrationStatus from "@api/shops/telegram/status";
 import IntegrationConnect from "@api/shops/telegram/connect";
+import TelegramHint from "@/components/TelegramHint";
 
 type Props = {
   shopId: number;
@@ -56,9 +57,8 @@ const TelegramConnect = ({shopId}: Props) => {
   }, []);
 
   return !isLoading ? (
-    <div className={`flex flex-1 min-h-screen min-w-screen justify-center items-center`}>
+    <div className={`flex flex-1 flex-col mt-4 min-h-screen min-w-screen justify-center items-center`}>
       <div className={`w-75 bg-white rounded-2xl shadow-lg p-6 space-y-6`}>
-
         <div className={`space-y-1`}>
           <h1 className={`text-xl font-semibold text-gray-800 mb-4`}>
             Shop #{shopId}
@@ -97,10 +97,10 @@ const TelegramConnect = ({shopId}: Props) => {
         <hr className={`my-4 text-gray-300`}/>
 
         <div className={`space-y-4`}>
-          <div className={`flex flex-row gap-2`}>
+          <div className={`flex items-center justify-between`}>
             <label className={`text-sm text-gray-600`}>Is Enabled</label>
 
-            <label className={`items-center gap-3 cursor-pointer select-none`}>
+            <label className={`relative inline-flex items-center cursor-pointer`}>
               <input
                 type="checkbox"
                 checked={isEnabled}
@@ -110,20 +110,17 @@ const TelegramConnect = ({shopId}: Props) => {
 
               <div
                 className={`
-                  w-5 h-5 rounded-md border border-gray-300 flex items-center justify-center transition
-                  peer-checked:bg-green-600 peer-checked:border-green-600
+                  w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200
+                  peer-checked:bg-green-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-400
                 `}
-              >
-                <svg
-                  className={`w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-              </div>
+              />
+
+              <div
+                className={`
+                  absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow
+                  transition-transform duration-200 peer-checked:translate-x-5
+                `}
+              />
             </label>
           </div>
 
@@ -166,8 +163,9 @@ const TelegramConnect = ({shopId}: Props) => {
         >
           Save
         </button>
-
       </div>
+
+      <TelegramHint/>
     </div>
   ) : (
     <div className={`flex flex-1 min-h-screen min-w-screen justify-center items-center`}>

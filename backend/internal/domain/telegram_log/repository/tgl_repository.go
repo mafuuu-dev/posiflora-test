@@ -8,6 +8,7 @@ import (
 
 type TelegramLogRepository interface {
 	GetStats(shopID int64) (*tgl_dto.StatsDTO, error)
+	GetLog(shopID int64, orderID int64) (*tgl_entity.TelegramLog, error)
 
 	CreateLog(
 		shopID int64,

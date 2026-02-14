@@ -44,7 +44,7 @@ services:
       pgsql:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:6000/api/maintenance/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/maintenance/health" ]
       interval: 10s
       timeout: 2s
       retries: 20

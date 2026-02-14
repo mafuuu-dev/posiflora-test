@@ -24,6 +24,12 @@ func (r *TelegramLogRepository) GetStats(shopID int64) (*tgl_dto.StatsDTO, error
 		Execute()
 }
 
+func (r *TelegramLogRepository) GetLog(shopID int64, orderID int64) (*tgl_entity.TelegramLog, error) {
+	return pg_tgl_query.NewGetLog(r.Query()).
+		Set(shopID, orderID).
+		Execute()
+}
+
 func (r *TelegramLogRepository) CreateLog(
 	shopID int64,
 	orderID int64,

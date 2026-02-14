@@ -31,14 +31,5 @@ func (u *ConnectIntegration) Change(
 	chatID string,
 	isEnabled bool,
 ) (*tgi_entity.TelegramIntegration, error) {
-	integration, err := u.repositories.TelegramIntegration.GetIntegration(shopID)
-	if err != nil {
-		return nil, err
-	}
-
-	if integration == nil {
-		return u.repositories.TelegramIntegration.CreateIntegration(shopID, botToken, chatID, isEnabled)
-	}
-
-	return u.repositories.TelegramIntegration.UpdateIntegration(shopID, botToken, chatID, isEnabled)
+	return u.repositories.TelegramIntegration.UpsertIntegration(shopID, botToken, chatID, isEnabled)
 }

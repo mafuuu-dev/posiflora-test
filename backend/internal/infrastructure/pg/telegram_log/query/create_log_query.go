@@ -40,7 +40,9 @@ func (q *CreateLog) Execute() (*tgl_entity.TelegramLog, error) {
 func (q *CreateLog) Sql() string {
 	return `
 		INSERT INTO telegram_send_log (shop_id, order_id, message, status, error)
-		SELECT $1::BIGINT, $2::BIGINT, $3::TEXT, $4::TELEGRAM_SEND_STATUS, $5::TEXT
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (shop_id, order_id) 
+		DO UPDATE SET order_id = EXCLUDED.order_id
 		RETURNING id, shop_id, order_id, message, status, error, sent_at
 	`
 }

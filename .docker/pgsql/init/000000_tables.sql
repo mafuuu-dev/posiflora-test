@@ -21,11 +21,13 @@ CREATE TABLE orders
 (
     id BIGSERIAL PRIMARY KEY,
     shop_id BIGINT REFERENCES shops(id) ON DELETE CASCADE,
-    number VARCHAR(255) UNIQUE NOT NULL,
+    number VARCHAR(255) NOT NULL,
     total INT,
     customer_name VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE UNIQUE INDEX idx_orders_shop_number ON orders (shop_id, number);
 
 --
 

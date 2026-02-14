@@ -37,7 +37,9 @@ func (q *CreateOrder) Execute() (*order_entity.Order, error) {
 func (q *CreateOrder) Sql() string {
 	return `
 		INSERT INTO orders (shop_id, number, total, customer_name)
-		SELECT $1::BIGINT, $2::TEXT, $3::BIGINT, $4::TEXT
+		VALUES ($1, $2, $3, $4)
+		ON CONFLICT (shop_id, number)
+		DO UPDATE SET number = EXCLUDED.number
 		RETURNING id, shop_id, number, total, customer_name, created_at
 	`
 }

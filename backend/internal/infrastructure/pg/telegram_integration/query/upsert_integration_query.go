@@ -7,7 +7,7 @@ import (
 	"backend/internal/infrastructure/pg/telegram_integration/mapper"
 )
 
-type CreateIntegration struct {
+type UpsertIntegration struct {
 	*query.Query
 	shopID    int64
 	botToken  string
@@ -15,13 +15,13 @@ type CreateIntegration struct {
 	isEnabled bool
 }
 
-func NewCreateIntegration(factory *query.Factory) *CreateIntegration {
-	return &CreateIntegration{
+func NewUpsertIntegration(factory *query.Factory) *UpsertIntegration {
+	return &UpsertIntegration{
 		Query: factory.Instance(),
 	}
 }
 
-func (q *CreateIntegration) Set(shopID int64, botToken string, chatID string, isEnabled bool) *CreateIntegration {
+func (q *UpsertIntegration) Set(shopID int64, botToken string, chatID string, isEnabled bool) *UpsertIntegration {
 	q.shopID = shopID
 	q.botToken = botToken
 	q.chatID = chatID
@@ -29,15 +29,17 @@ func (q *CreateIntegration) Set(shopID int64, botToken string, chatID string, is
 	return q
 }
 
-func (q *CreateIntegration) Execute() (*tgi_entity.TelegramIntegration, error) {
+func (q *UpsertIntegration) Execute() (*tgi_entity.TelegramIntegration, error) {
 	row := q.QueryRow(q, q.shopID, q.botToken, q.chatID, q.isEnabled)
 	return pgscan.ScanOne[tgi_entity.TelegramIntegration](row, pg_tgi_mapper.ToEntity)
 }
 
-func (q *CreateIntegration) Sql() string {
+func (q *UpsertIntegration) Sql() string {
 	return `
 		INSERT INTO telegram_integrations (shop_id, bot_token, chat_id, is_enabled)
-		SELECT $1::BIGINT, $2::TEXT, $3::TEXT, $4::BOOLEAN
+		VALUES ($1, $2, $3, $4)
+		ON CONFLICT (shop_id) 
+		DO UPDATE SET bot_token = $2::TEXT, chat_id = $3::TEXT, is_enabled = $4::BOOLEAN
 		RETURNING id, shop_id, bot_token, chat_id, is_enabled, created_at, updated_at
 	`
 }

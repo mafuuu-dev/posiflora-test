@@ -22,24 +22,13 @@ func (r *TelegramIntegrationRepository) GetIntegration(shopID int64) (*tgi_entit
 		Execute()
 }
 
-func (r *TelegramIntegrationRepository) CreateIntegration(
+func (r *TelegramIntegrationRepository) UpsertIntegration(
 	shopID int64,
 	botToken string,
 	chatID string,
 	isEnabled bool,
 ) (*tgi_entity.TelegramIntegration, error) {
-	return pg_tgi_query.NewCreateIntegration(r.Query()).
-		Set(shopID, botToken, chatID, isEnabled).
-		Execute()
-}
-
-func (r *TelegramIntegrationRepository) UpdateIntegration(
-	shopID int64,
-	botToken string,
-	chatID string,
-	isEnabled bool,
-) (*tgi_entity.TelegramIntegration, error) {
-	return pg_tgi_query.NewUpdateIntegration(r.Query()).
+	return pg_tgi_query.NewUpsertIntegration(r.Query()).
 		Set(shopID, botToken, chatID, isEnabled).
 		Execute()
 }
